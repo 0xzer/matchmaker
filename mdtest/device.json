@@ -1,0 +1,29 @@
+{
+    "DeviceId": "",
+    "OsVersion": "",
+    "PersistentDeviceId": "",
+    "Manufacturer": "",
+    "Model": "",
+    "DeviceOsVersion": "",
+    "DataProvider": "",
+    "AdvertisingId": "",
+    "AuthSession": {
+        "appSessionId": "",
+        "appSessionTimeElapsed": 0,
+        "CreatedAt": ""
+    },
+    "Session": {
+        "appSessionId": "",
+        "appSessionTimeElapsed": 0,
+        "CreatedAt": ""
+    },
+    "UserSession": {
+        "UserId": "",
+        "AuthTokenTTL": 0,
+        "RefreshToken": "",
+        "x-auth-token": "",
+        "userSessionId": "",
+        "userSessionTimeElapsed": 0,
+        "CreatedAt": ""
+    }
+}

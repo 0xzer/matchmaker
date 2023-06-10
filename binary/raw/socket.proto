@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package binary;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "../../binary";
+
+message TimeStamps {
+    google.protobuf.Timestamp timestamp = 1;
+    google.protobuf.Timestamp timestamp2 = 2;
+}
+
+message StartTyping {
+    google.protobuf.Timestamp timestamp = 1;
+    string match_id = 2;
+    string user_id = 3;
+}
+
+message ConnectedOnAnotherClient {
+    google.protobuf.Timestamp timestamp = 1;
+}
+
+message Image {
+    string url = 1;
+    int32 height = 2;
+    int32 width = 3;
+}
+
+message AddedImage {
+    string id = 1;
+    string original_url = 2;
+    repeated Image images = 3;
+    int32 images_added = 6;
+}
+
+message AppAction {
+    google.protobuf.Timestamp timestamp = 1;
+    /*
+      If actionType exists within the response.
+      The action was executed by the current user,
+      otherwise, it was executed by another user.
+
+      Self Action Types
+      4 = blocked a user
+      2 = sent message
+    */
+    int32 actionType = 2;
+}
+
+message UnknownEvent {
+    string msg = 1;
+}
+
+message SocketEvents {
+    google.protobuf.Timestamp serverTimestamps = 1;
+    oneof data {
+        AppAction appAction = 3;
+        StartTyping startTyping = 7;
+        ConnectedOnAnotherClient connectFromAnotherClient = 15;
+        AddedImage addedImage = 16;
+        UnknownEvent unknownEvent = 22;
+    }
+}

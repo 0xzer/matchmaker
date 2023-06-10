@@ -1,0 +1,1319 @@
+syntax = "proto3";
+
+package binary;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "../../binary";
+
+
+message InitialData {
+    AppEventData data = 1;
+}
+
+message AppEventData {
+    google.protobuf.StringValue batchId = 1;
+    repeated Event events = 2;
+}
+
+message Event {
+    google.protobuf.StringValue id = 1;
+    google.protobuf.Timestamp create_time = 2;
+    AppEventSession event_session = 4;
+    
+    oneof value {
+        AppPlatformEvent platform = 9;
+    }
+}
+
+message AppPlatformEvent {
+    oneof value {
+        NetworkPerf network_perf = 4;
+        BinaryParseErrorEvent binary_parse_error_event = 5;
+        JsonParseErrorEvent json_parse_error_event = 6;
+        LogEvent log_event = 7;
+        DurationMeasure duration_measure = 8;
+        JsonEvent json_event = 9;
+        HubbleInstrument hubble_instrument = 10;
+        TestEvent1 test_event_1 = 1024;
+    }
+}
+
+message TestEvent1 {
+    google.protobuf.StringValue id = 1;
+    TestEvent1Type type = 2;
+    google.protobuf.Duration duration = 3;
+    google.protobuf.Timestamp time = 4;
+    google.protobuf.Int32Value count = 5;
+    google.protobuf.BoolValue is_enabled = 6;
+}
+
+enum TestEvent1Type {
+    TEST_EVENT1_TYPE_INVALID = 0;
+    TEST_EVENT1_TYPE_TYPE1 = 1;
+    TEST_EVENT1_TYPE_TYPE2 = 2;
+}
+
+message HubbleInstrument {
+    google.protobuf.StringValue id = 1;
+    HubbleInstrumentType type = 2;
+    InstrumentDetails instrument_details = 3;
+}
+
+enum HubbleInstrumentType {
+    HUBBLE_INSTRUMENT_TYPE_INVALID = 0;
+    HUBBLE_INSTRUMENT_TYPE_IMPRESSION = 1;
+    HUBBLE_INSTRUMENT_TYPE_TAP = 2;
+    HUBBLE_INSTRUMENT_TYPE_SWIPE = 3;
+    HUBBLE_INSTRUMENT_TYPE_CUSTOM = 4;
+    HUBBLE_INSTRUMENT_TYPE_SWIPE_UP = 5;
+    HUBBLE_INSTRUMENT_TYPE_SWIPE_DOWN = 6;
+    HUBBLE_INSTRUMENT_TYPE_SWIPE_LEFT = 7;
+    HUBBLE_INSTRUMENT_TYPE_SWIPE_RIGHT = 8;
+    HUBBLE_INSTRUMENT_TYPE_NETWORK_REQUEST = 9;
+}
+
+
+message DurationMeasure {
+    Category category = 1;
+    enum Category {
+        CATEGORY_INVALID = 0;
+        CATEGORY_STARTUP = 1;
+    }
+    
+    google.protobuf.StringValue type = 2;
+    google.protobuf.StringValue subtype = 3;
+    google.protobuf.Duration duration = 4;
+    google.protobuf.BoolValue success = 5;
+}
+message Meta {
+    SourceDescriptor source = 1;
+    ExperienceId experience_id = 2;
+    ExperienceId previous_experience_id = 3;
+    google.protobuf.StringValue flow_name = 4;
+    google.protobuf.StringValue parent_flow_name = 5;
+    google.protobuf.StringValue step_name = 6;
+    google.protobuf.Int32Value step_count = 7;
+    StatusCode status_code = 8;
+    google.protobuf.StringValue status_message = 9;
+}
+
+message SkuPackageDetails {
+    google.protobuf.StringValue sku = 1;
+    google.protobuf.DoubleValue price = 2;
+}
+
+message EventDetails {
+    oneof value {
+        SkuPackageDetails sku_details = 1;
+    }
+}
+
+message InstrumentDetails {
+    EntityType entity_type = 4;
+    google.protobuf.StringValue entity_id = 5;
+    
+    oneof value {
+        PaywallDetails paywall_details = 1;
+        RecsPhotoDetails recs_photo_details = 2;
+        RecsCoreDetails recs_core_details = 20;
+    }
+}
+
+enum EventType {
+    EVENT_TYPE_INVALID = 0;
+    EVENT_TYPE_EXPERIENCE = 1;
+    EVENT_TYPE_FLOW = 2;
+    EVENT_TYPE_OUTCOME = 3;
+    EVENT_TYPE_INTERACT = 4;
+    EVENT_TYPE_OTHER = 5;
+}
+
+enum StatusCode {
+    STATUS_CODE_INVALID = 0;
+    STATUS_CODE_SUCCESS = 1;
+    STATUS_CODE_FAILURE = 2;
+}
+message AppEventSession {
+    AppAttributes app = 1;
+    AuthAttributes auth = 2;
+    DeviceAttributes device = 3;
+    LocationAttributes location = 4;
+    UserAttributes user = 5;
+}
+
+message NetworkProvider {
+    google.protobuf.StringValue name = 1;
+    
+    oneof value {
+        NetworkType type = 2;
+    }
+}
+
+message DeviceAttributes {
+    google.protobuf.StringValue device_id = 1;
+    google.protobuf.StringValue locale = 2;
+    google.protobuf.StringValue persistent_id = 3;
+    google.protobuf.StringValue language = 4;
+    google.protobuf.StringValue manufacturer = 5;
+    google.protobuf.StringValue model = 6;
+    NetworkProvider device_network_provider = 7;
+    DevicePlatform platform = 8;
+    PowerAttributes power = 9;
+    MemoryAttributes memory = 10;
+    CountryCode country_code = 11;
+    LanguageCode language_code = 12;
+    google.protobuf.BoolValue is_emulator = 13;
+}
+
+message ServiceAttributes {
+    ServiceName name = 1;
+    SemanticVersion version = 2;
+}
+
+message SourceDescriptor {
+    google.protobuf.StringValue label = 1;
+    FeatureType feature = 2;
+    UiElement element = 3;
+    EntityType entity_type = 4;
+    google.protobuf.StringValue entity_id = 5;
+    SourceAction source_action = 6;
+    SourceComponent source_component = 7;
+    google.protobuf.StringValue source_id = 8;
+}
+
+enum UiElement {
+    UI_ELEMENT_INVALID = 0;
+    UI_ELEMENT_BUTTON = 1;
+    UI_ELEMENT_CARD = 2;
+    UI_ELEMENT_SCREEN = 3;
+    UI_ELEMENT_PUSH_NOTIFICATION = 4;
+    UI_ELEMENT_IN_APP_NOTIFICATION = 5;
+    UI_ELEMENT_FORCE_TOUCH = 6;
+    UI_ELEMENT_SWITCH = 7;
+    UI_ELEMENT_GENERIC_VIEW = 256;
+}
+
+enum FeatureType {
+    FEATURE_TYPE_INVALID = 0;
+    FEATURE_TYPE_BOOST = 1;
+    FEATURE_TYPE_GOLD = 2;
+    FEATURE_TYPE_PLATINUM = 3;
+    FEATURE_TYPE_REWIND = 4;
+    FEATURE_TYPE_SUPER_BOOST = 5;
+    FEATURE_TYPE_SUPER_LIKE = 6;
+    FEATURE_TYPE_READ_RECEIPTS = 7;
+    FEATURE_TYPE_PLUS = 8;
+    FEATURE_TYPE_BOOST_SUBSCRIPTION = 9;
+    FEATURE_TYPE_SUB_MERCHANDISING = 10;
+    FEATURE_TYPE_CONSUMABLE = 11;
+    FEATURE_TYPE_PRIMETIME_BOOST = 12;
+}
+
+enum SourceAction {
+    SOURCE_ACTION_INVALID = 0;
+    SOURCE_ACTION_ELEMENT_VIEWED = 1;
+    SOURCE_ACTION_ELEMENT_TAPPED = 2;
+    SOURCE_ACTION_ELEMENT_TOGGLED = 3;
+}
+
+enum EntityType {
+    ENTITY_TYPE_INVALID = 0;
+    ENTITY_TYPE_USER = 4;
+    ENTITY_TYPE_SKU = 5;
+    ENTITY_TYPE_NETWORK_REQUEST = 20;
+}
+
+enum SourceComponent {
+    SOURCE_COMPONENT_INVALID = 0;
+    SOURCE_COMPONENT_BACK_BUTTON = 18;
+    SOURCE_COMPONENT_BOTTOM_TAB_BAR = 19;
+    SOURCE_COMPONENT_READ_RECEIPTS = 20;
+    SOURCE_COMPONENT_TINDER_PLUS_BTN = 21;
+    SOURCE_COMPONENT_PAYWALL_CONTINUE = 22;
+    SOURCE_COMPONENT_PAYMENT_CANCEL = 23;
+    SOURCE_COMPONENT_PAYMENT_SUBSCRIBE = 24;
+    SOURCE_COMPONENT_PAYMENT_MODAL_OK = 25;
+    SOURCE_COMPONENT_MERCHANDISING_MODAL = 26;
+    SOURCE_COMPONENT_PROFILE_UPSELL_ADVERTISEMENT = 27;
+    SOURCE_COMPONENT_SETTINGS_BUTTON = 28;
+    SOURCE_COMPONENT_NO_THANKS_BUTTON = 29;
+    SOURCE_COMPONENT_READ_RECEIPTS_EMPTY_CHAT_BUTTON = 30;
+    SOURCE_COMPONENT_GAMEPAD_UNDO = 31;
+    SOURCE_COMPONENT_PASSPORT_ADD_LOCATION = 32;
+    SOURCE_COMPONENT_PASSPORT_RECENT_LOCATION = 33;
+    SOURCE_COMPONENT_GAMEPAD_LIKE = 34;
+    SOURCE_COMPONENT_GAMEPAD_SUPERLIKE = 35;
+    SOURCE_COMPONENT_BLENDS_ACTIVITY = 36;
+    SOURCE_COMPONENT_SETTINGS_PLUS_BUTTON = 37;
+    SOURCE_COMPONENT_EDIT_PROFILE_ACTIVITY = 38;
+    SOURCE_COMPONENT_CONTROL_UNDO = 39;
+    SOURCE_COMPONENT_CONTROL_UNLIMITED_SWIPES = 40;
+    SOURCE_COMPONENT_CONTROL_HIDE_ADS = 41;
+    SOURCE_COMPONENT_CONTROL_SUPERLIKE_FEATURE = 42;
+    SOURCE_COMPONENT_CONTROL_BOOST_FEATURE = 43;
+    SOURCE_COMPONENT_CONTROL_WHO_SEES_YOU = 44;
+    SOURCE_COMPONENT_CONTROL_YOUR_PROFILE = 45;
+    SOURCE_COMPONENT_CONTROL_OTHER_FEATURE = 46;
+    SOURCE_COMPONENT_CONTROL_PASSPORT = 47;
+    SOURCE_COMPONENT_CONTROL_PLUS_BUTTON = 48;
+    SOURCE_COMPONENT_DISCOUNT_AVAILABLE = 49;
+    SOURCE_COMPONENT_DISCOUNT_REMINDER = 50;
+    SOURCE_COMPONENT_DISCOUNT_NOTIFICATION = 51;
+    SOURCE_COMPONENT_BOOST_DIALOG_SUMMARY = 52;
+    SOURCE_COMPONENT_DEEPLINK_PLUS = 53;
+    SOURCE_COMPONENT_BOOST_DIALOG_UPSELL_BUTTON = 54;
+    SOURCE_COMPONENT_BOOST_DIALOG_UPDATE = 55;
+    SOURCE_COMPONENT_SUPERLIKE_DIALOG_UPSELL = 56;
+    SOURCE_COMPONENT_PROFILE_TAB = 57;
+    SOURCE_COMPONENT_PROFILE_TAB_UNLIMITED_LIKES = 58;
+    SOURCE_COMPONENT_RECS_EXHAUSTED_SETTINGS = 59;
+    SOURCE_COMPONENT_PLUS_NATIVE_DFP_AD = 60;
+    SOURCE_COMPONENT_LAST_HOUR_AUTO_OPEN = 61;
+    SOURCE_COMPONENT_MISSED_MATCH_REWIND_PROMO = 62;
+    SOURCE_COMPONENT_LIKES_SENT = 63;
+    SOURCE_COMPONENT_BOUNCER_BYPASS = 64;
+    SOURCE_COMPONENT_SUB_MERCHANDISING_PLUS_BUTTON = 65;
+    SOURCE_COMPONENT_STORE_PLUS_BUTTON = 66;
+    SOURCE_COMPONENT_SUPERLIKE_EXHAUSTED = 67;
+    SOURCE_COMPONENT_SETTINGS_SUPERLIKE_BUTTON = 68;
+    SOURCE_COMPONENT_PLUS_CONTROL_SUPERLIKE_BUTTON = 69;
+    SOURCE_COMPONENT_DEEPLINK_SUPERLIKE = 70;
+    SOURCE_COMPONENT_TOP_PICKS = 71;
+    SOURCE_COMPONENT_PROFILE_TAB_SUPERLIKE = 72;
+    SOURCE_COMPONENT_UPSELL_SUPERLIKE_COMMON_INTERESTS = 74;
+    SOURCE_COMPONENT_FASTMATCH_MATCHLIST_PREVIEW = 75;
+    SOURCE_COMPONENT_SETTINGS_GOLD_BUTTON = 76;
+    SOURCE_COMPONENT_FASTMATCH_INTRO = 77;
+    SOURCE_COMPONENT_DEEPLINK = 78;
+    SOURCE_COMPONENT_CONTROLLA_GOLD_FEATURE = 79;
+    SOURCE_COMPONENT_CONTROLLA_TOP_PICKS = 80;
+    SOURCE_COMPONENT_TOP_PICKS_FOOTER_BUTTON = 81;
+    SOURCE_COMPONENT_TOP_PICKS_SCROLL_TO_BOTTOM = 82;
+    SOURCE_COMPONENT_TOP_PICKS_SWIPE_LEFT_ON_REC = 83;
+    SOURCE_COMPONENT_TOP_PICKS_SWIPE_RIGHT_ON_REC = 84;
+    SOURCE_COMPONENT_TOP_PICKS_VIEWING_PROFILE = 85;
+    SOURCE_COMPONENT_LIKES_BOUNCER = 86;
+    SOURCE_COMPONENT_REWIND = 87;
+    SOURCE_COMPONENT_TOP_PICKS_DEEPLINK = 88;
+    SOURCE_COMPONENT_GOLD_NATIVE_DFP_AD = 89;
+    SOURCE_COMPONENT_SUPERLIKE = 90;
+    SOURCE_COMPONENT_TEASER_SWIPE_LEFT = 91;
+    SOURCE_COMPONENT_TEASER_SWIPE_RIGHT = 92;
+    SOURCE_COMPONENT_TEASER_PROFILE = 93;
+    SOURCE_COMPONENT_LIKES_YOU_ENTRY_POINT = 94;
+    SOURCE_COMPONENT_GOLD_HOME_FAST_MATCH_TEASER_TAP = 95;
+    SOURCE_COMPONENT_GOLD_HOME_FAST_MATCH_TEASER_SWIPE = 96;
+    SOURCE_COMPONENT_GOLD_HOME_FAST_MATCH_SCROLL_TO_BOTTOM = 97;
+    SOURCE_COMPONENT_GOLD_HOME_CTA_BUTTON = 98;
+    SOURCE_COMPONENT_MISSED_MATCH_DEEPLINK = 99;
+    SOURCE_COMPONENT_SPLASH_FAN_CARD = 100;
+    SOURCE_COMPONENT_SPLASH_PROFILE_CARD = 101;
+    SOURCE_COMPONENT_SPLASH_CTA_BUTTON = 102;
+    SOURCE_COMPONENT_SECRET_ADMIRER_UPSELL = 103;
+    SOURCE_COMPONENT_GOLD_INTRO_CELEBRATION = 104;
+    SOURCE_COMPONENT_BOOST_DIALOG_SUMMARY_GOLD_BUTTON = 105;
+    SOURCE_COMPONENT_RECENTLY_ACTIVE_MATCH_LIST = 106;
+    SOURCE_COMPONENT_CATEGORIES_TEASER_INTERACTION = 107;
+    SOURCE_COMPONENT_CATEGORIES_SWIPE_ON_ALL_TOP_PICKS = 108;
+    SOURCE_COMPONENT_BOOST_UPSELL = 109;
+    SOURCE_COMPONENT_GOLD_HOME_FILTERS = 110;
+    SOURCE_COMPONENT_SUB_MERCHANDISING_GOLD_BUTTON = 111;
+    SOURCE_COMPONENT_BOOST_REDESIGN_UPSELL = 112;
+    SOURCE_COMPONENT_STORE_GOLD_BUTTON = 113;
+    SOURCE_COMPONENT_CONTROLLA_PLAT = 114;
+    SOURCE_COMPONENT_SETTINGS_PLAT_BUTTON = 115;
+    SOURCE_COMPONENT_PLAT_DEEPLINK = 116;
+    SOURCE_COMPONENT_PLAT_SWIPENOTE = 117;
+    SOURCE_COMPONENT_PLAT_UPGRADE_MODAL = 118;
+    SOURCE_COMPONENT_PLAT_PLUS_BOUNCER = 119;
+    SOURCE_COMPONENT_PRIORITY_MESSAGES_UPSELL = 120;
+    SOURCE_COMPONENT_MY_LIKES_CTA = 121;
+    SOURCE_COMPONENT_MY_LIKES_INITIAL_ENTRY_UPSELL = 122;
+    SOURCE_COMPONENT_MY_LIKES_BOTTOM_SCROLL_UPSELL = 123;
+    SOURCE_COMPONENT_MATCHLIST_PLAT_UPSELL = 124;
+    SOURCE_COMPONENT_MY_LIKES_ATTACH_MESSAGE_UPSELL = 125;
+    SOURCE_COMPONENT_MATCHLIST_RECENTLY_ACTIVE_UPSELL = 126;
+    SOURCE_COMPONENT_SUB_MERCHANDISING_PLAT_BUTTON = 127;
+    SOURCE_COMPONENT_BOOST_REDESIGN_PLAT_UPSELL = 128;
+    SOURCE_COMPONENT_STORE = 129;
+    SOURCE_COMPONENT_GAMEPAD_BOOST = 130;
+    SOURCE_COMPONENT_BOOST_END = 131;
+    SOURCE_COMPONENT_PLUS_CONTROL_BOOST_BUTTON = 132;
+    SOURCE_COMPONENT_SETTINGS_BOOST_BUTTON = 133;
+    SOURCE_COMPONENT_DEEPLINK_BOOST = 134;
+    SOURCE_COMPONENT_BOOST_DIALOG_INTRO = 135;
+    SOURCE_COMPONENT_FAST_MATCH_BOOST = 136;
+    SOURCE_COMPONENT_PROFILE_TAB_BOOST = 137;
+    SOURCE_COMPONENT_GOLD_HOME_BOOST = 138;
+    SOURCE_COMPONENT_MERCHANDISING_DEEPLINK_BOOST = 139;
+    SOURCE_COMPONENT_BOOST_UPSELL_MODAL = 140;
+    SOURCE_COMPONENT_PAYWALL_DIALOG_SCREEN = 141;
+    SOURCE_COMPONENT_PAYWALL_DIALOG_BACK_BUTTON = 142;
+    SOURCE_COMPONENT_OFFER_PACKAGE_TILE = 143;
+    SOURCE_COMPONENT_SELECT_PACKAGE_CONTINUE_BUTTON = 144;
+    SOURCE_COMPONENT_MAKE_PURCHASE_STEP_SCREEN = 145;
+    SOURCE_COMPONENT_MAKE_PURCHASE_STEP_BACK_BUTTON = 146;
+    SOURCE_COMPONENT_CREDIT_CARD_BUY_NOW_BUTTON = 147;
+    SOURCE_COMPONENT_GOOGLE_BUY_NOW_BUTTON = 148;
+}
+
+message BinaryParseErrorEvent {
+    google.protobuf.StringValue tag = 1;
+    google.protobuf.StringValue message = 2;
+    google.protobuf.BytesValue bytes = 3;
+}
+
+message JsonParseErrorEvent {
+    google.protobuf.StringValue tag = 1;
+    google.protobuf.StringValue message = 2;
+    google.protobuf.StringValue json = 3;
+}
+
+message PaywallDetails {
+    FeatureType feature = 1;
+}
+
+message ServiceName {
+    oneof value {
+        PurchaseService purchase_service = 1;
+        TestService test = 1024;
+    }
+}
+
+message PurchaseService {
+    
+}
+
+message TestService {
+    
+}
+
+message ServerAttributes {
+    OperatingSystem operating_system = 1;
+}
+
+message LocationAttributes {
+    google.protobuf.DoubleValue lat = 1;
+    google.protobuf.DoubleValue lon = 2;
+    google.protobuf.Timestamp location_time = 3;
+}
+
+message OperatingSystem {
+    google.protobuf.StringValue os_version = 1;
+    
+    oneof type {
+        Linux linux = 5;
+        Darwin darwin = 6;
+        Windows windows = 7;
+    }
+}
+
+message Linux {
+    SemanticVersion version = 1;
+}
+
+message Darwin {
+    SemanticVersion version = 1;
+}
+
+message Windows {
+    SemanticVersion version = 1;
+}
+
+message AuthAttributes {
+    google.protobuf.StringValue auth_id = 1;
+    google.protobuf.StringValue auth_session_id = 2;
+}
+
+message AppAttributes {
+    AppName name = 1;
+    SemanticVersion version = 2;
+    AppSession session = 1024;
+}
+
+message AppSession {
+    google.protobuf.StringValue session_id = 1;
+    google.protobuf.Int64Value session_time_elapsed = 2;
+}
+
+message UserAttributes {
+    google.protobuf.StringValue uid = 1;
+    UserSession session = 2;
+    UserType user_type = 3;
+    Gender user_gender = 4;
+    Gender target_gender = 5;
+}
+
+message UserSession {
+    google.protobuf.StringValue session_id = 1;
+    google.protobuf.Duration session_time_duration = 2;
+}
+
+enum Gender {
+    GENDER_INVALID = 0;
+    GENDER_MALE = 1;
+    GENDER_FEMALE = 2;
+    GENDER_OTHER = 3;
+}
+
+enum UserType {
+    USER_TYPE_INVALID = 0;
+    USER_TYPE_INTERNAL = 1;
+    USER_TYPE_EXTERNAL = 2;
+}
+
+message AppName {
+    oneof value {
+        TinderApp tinder = 1;
+        AnalyticsSdkDemoApp analytics_sdk_demo = 2;
+        TestApp test_app = 3;
+    }
+}
+
+message TestApp {
+    google.protobuf.StringValue name = 1;
+}
+enum Adapter {
+    ADAPTER_INVALID = 0;
+    ADAPTER_EVENT_RECORD = 1;
+}
+
+message AnalyticsSdkDemoApp {
+    
+}
+
+enum EventAttribute {
+    INVALID = 0;
+    EVENT_SERVER_TIME = 1;
+    EVENT_DERIVED_COUNTRY = 2;
+    APP_EVENT_ID = 30;
+    APP_EVENT_CREATE_TIME = 31;
+    APP_NAME = 50;
+    APP_VERSION = 51;
+    APP_SESSION_ID = 70;
+    APP_SESSION_TIME_ELAPSED = 71;
+    AUTH_ID = 90;
+    AUTH_SESSION_ID = 91;
+    DEVICE_ID = 120;
+    DEVICE_PLATFORM = 121;
+    DEVICE_OS_VERSION = 122;
+    DEVICE_MANUFACTURER = 123;
+    DEVICE_MODEL = 124;
+    DEVICE_PERSISTENT_ID = 125;
+    DEVICE_LANGUAGE = 126;
+    DEVICE_COUNTRY_CODE = 127;
+    DEVICE_NETWORK_PROVIDER_NAME = 128;
+    DEVICE_NETWORK_PROVIDER_TYPE = 129;
+    DEVICE_BATTERY_LEVEL_PERCENT = 130;
+    DEVICE_LOWER_POWER_MODE_ENABLED = 131;
+    DEVICE_TOTAL_RAM_BYTES = 132;
+    DEVICE_FREE_RAM_BYTES = 133;
+    DEVICE_RAM_USED_BY_APP_BYTES = 134;
+    IOS_DEVICE_ID = 200;
+    IOS_OS_VERSION = 201;
+    IOS_COUNTRY = 202;
+    IOS_IS_JAILBROKEN = 203;
+    ANDROID_PLATFORM_VARIANT = 280;
+    ANDROID_INSTANCE_ID = 281;
+    ANDROID_DEVICE_ID = 282;
+    ANDROID_OS_VERSION = 283;
+    ANDROID_IS_ROOTED = 284;
+    ANDROID_STORE_VARIANT = 285;
+    BROWSER_NAME = 350;
+    BROWSER_VERSION = 351;
+    LOCATION_TIME = 380;
+    LOCATION_LATITUDE = 381;
+    LOCATION_LONGITUDE = 382;
+    USER_UID = 430;
+    USER_TYPE = 431;
+    USER_GENDER = 432;
+    USER_TARGET_GENDER = 433;
+    USER_SESSION_DURATION = 434;
+    USER_SESSION_ID = 435;
+    SERVER_EVENT_ID = 500;
+    SERVER_EVENT_CREATE_TIME = 501;
+    SERVICE_NAME = 520;
+    SERVICE_VERSION = 521;
+    SERVER_OPERATING_SYSTEM = 750;
+    WINDOWS_VERSION = 771;
+    LINUX_VERSION = 772;
+    DARWIN_VERSION = 773;
+    OS_VERSION = 774;
+    HUBBLE_INSTRUMENT_ID = 900;
+    HUBBLE_INSTRUMENT_TYPE = 901;
+    HUBBLE_ENTITY_TYPE = 902;
+    HUBBLE_ENTITY_ID = 903;
+    HUBBLE_SERVER_INSTRUMENT_ID = 920;
+}
+
+message ContentDescriptor {
+    google.protobuf.StringValue id = 1;
+    google.protobuf.StringValue url = 2;
+}
+
+enum ExperienceId {
+    EXPERIENCE_ID_INVALID = 0;
+    EXPERIENCE_ID_CHAT = 1;
+    EXPERIENCE_ID_LIKES_YOU = 2;
+    EXPERIENCE_ID_RECS = 3;
+    EXPERIENCE_ID_PROFILE = 4;
+    EXPERIENCE_ID_SETTINGS = 5;
+    EXPERIENCE_ID_EXPLORE = 6;
+    EXPERIENCE_ID_MATCH_LIST = 7;
+    EXPERIENCE_ID_GOLD_HOME = 8;
+    EXPERIENCE_ID_HANGOUTS_LOBBY = 9;
+}
+
+message RecsPhotoDetails {
+    google.protobuf.StringValue photo_id = 1;
+    google.protobuf.StringValue url = 2;
+}
+
+message RecsCoreDetails {
+    google.protobuf.Int32Value request_index = 1;
+    google.protobuf.Int32Value discovery_index = 2;
+    google.protobuf.Int32Value recs_cards_count = 3;
+}
+
+message CustomConversion {
+    TypeAttributeConverter attribute_converter = 1075;
+    string output_type = 1076;
+}
+
+message EventRecordRoot {
+    repeated EventAttribute includes = 1073;
+}
+
+message TinderApp {
+    
+}
+
+message TypeConverterConfig {
+    string message = 1;
+    map<string, TypeAttributeConfig> mapping = 2;
+}
+
+message TypeAttributeConfig {
+    string source = 1;
+    repeated TypeAttributeConverter converter = 2;
+    string source_alias = 3;
+    bool repeated = 4;
+}
+
+message TypeAttributeConverter {
+    oneof value {
+        IdentityConverter identity = 6;
+        UppercaseConverter uppercase = 7;
+        LowercaseConverter lowercase = 8;
+        SubstringConverter substring = 9;
+        IntegerToEnumConverter int32_to_enum = 10;
+        StringToEnumConverter string_to_enum = 11;
+        TimeUnitToTimestampConverter time_unit_to_timestamp = 12;
+        TimeUnitToDurationConverter time_unit_to_duration = 13;
+        TimestampToTimeUnitConverter timestamp_to_time_unit = 14;
+        DurationToTimeUnitConverter duration_to_time_unit = 15;
+        EnumToStringConverter enum_to_string = 16;
+        EnumToIntegerConverter enum_to_int32 = 17;
+        RepeatedToStringConverter repeated_to_string = 18;
+        SemanticVersionToStringConverter semantic_version_to_string = 19;
+        OneofNameToStringConverter oneof_name_to_string = 20;
+    }
+}
+
+message IdentityConverter {
+    
+}
+
+message UppercaseConverter {
+    
+}
+
+message LowercaseConverter {
+    
+}
+
+message RepeatedToStringConverter {
+    
+}
+
+message IntegerToEnumConverter {
+    map<int32, int32> mapping = 1;
+}
+
+message EnumToIntegerConverter {
+    map<int32, int32> mapping = 1;
+}
+
+message StringToEnumConverter {
+    map<string, int32> mapping = 1;
+}
+
+message EnumToStringConverter {
+    map<int32, string> mapping = 1;
+}
+
+message SubstringConverter {
+    int32 start = 1;
+    int32 end = 2;
+}
+
+message TimeUnitToTimestampConverter {
+    TimeUnit time_unit = 1;
+}
+
+message TimeUnitToDurationConverter {
+    TimeUnit time_unit = 1;
+}
+
+message DurationToTimeUnitConverter {
+    TimeUnit time_unit = 1;
+}
+
+message TimestampToTimeUnitConverter {
+    TimeUnit time_unit = 1;
+}
+
+message SemanticVersionToStringConverter {
+    bool include_build = 1;
+    bool include_release = 2;
+}
+
+message OneofNameToStringConverter {
+    string attribute_name = 1;
+}
+
+enum TimeUnit {
+    TIME_UNIT_INVALID = 0;
+    TIME_UNIT_MILLISECONDS = 1;
+    TIME_UNIT_SECONDS = 2;
+    TIME_UNIT_MINUTES = 3;
+    TIME_UNIT_HOURS = 4;
+    TIME_UNIT_NANOSECONDS = 5;
+    TIME_UNIT_MICROSECONDS = 6;
+}
+
+message SemanticVersion {
+    google.protobuf.Int32Value major = 1;
+    google.protobuf.Int32Value minor = 2;
+    google.protobuf.Int32Value patch = 3;
+    google.protobuf.Int32Value build = 4;
+    google.protobuf.BoolValue release = 5;
+}
+
+message MemoryAttributes {
+    google.protobuf.Int64Value total_ram_bytes = 1;
+    google.protobuf.Int64Value free_ram_bytes = 2;
+    google.protobuf.Int64Value ram_used_by_app_bytes = 3;
+}
+
+message PowerAttributes {
+    google.protobuf.DoubleValue battery_level_percent = 1;
+    google.protobuf.BoolValue lower_power_mode_enabled = 2;
+}
+
+message DevicePlatform {
+    google.protobuf.StringValue os_version = 1;
+    
+    oneof type {
+        Android android = 5;
+        Browser browser = 6;
+        Ios ios = 7;
+        AndroidLite android_lite = 8;
+        IosLite ios_lite = 9;
+    }
+}
+
+message Android {
+    PlatformVariant platform_variant = 1;
+    google.protobuf.StringValue instance_id = 2;
+    google.protobuf.StringValue device_id = 3;
+    google.protobuf.StringValue os_version = 4;
+    google.protobuf.BoolValue is_rooted = 5;
+    StoreVariant store_variant = 6;
+}
+
+message Browser {
+    google.protobuf.StringValue name = 1;
+    google.protobuf.StringValue version = 2;
+}
+
+message Ios {
+    google.protobuf.StringValue idfa = 1;
+    google.protobuf.StringValue device_id = 2;
+    google.protobuf.StringValue os_version = 3;
+    CountryCode country = 4;
+    google.protobuf.BoolValue is_jailbroken = 5;
+}
+
+message AndroidLite {
+    
+}
+
+message IosLite {
+    
+}
+
+enum PlatformVariant {
+    PLATFORM_VARIANT_INVALID = 0;
+    PLATFORM_VARIANT_GOOGLE = 1;
+    PLATFORM_VARIANT_HUAWEI = 2;
+}
+
+enum StoreVariant {
+    STORE_VARIANT_INVALID = 0;
+    STORE_VARIANT_HUAWEI = 1;
+    STORE_VARIANT_OPPO = 2;
+    STORE_VARIANT_PLAY_STORE = 3;
+    STORE_VARIANT_SAMSUNG = 4;
+    STORE_VARIANT_XIAOMI = 5;
+    STORE_VARIANT_VIVO = 6;
+}
+
+enum CountryCode {
+    COUNTRY_CODE_INVALID = 0;
+    COUNTRY_CODE_AC = 1;
+    COUNTRY_CODE_AD = 2;
+    COUNTRY_CODE_AE = 3;
+    COUNTRY_CODE_AF = 4;
+    COUNTRY_CODE_AG = 5;
+    COUNTRY_CODE_AI = 6;
+    COUNTRY_CODE_AL = 7;
+    COUNTRY_CODE_AM = 8;
+    COUNTRY_CODE_AN = 9;
+    COUNTRY_CODE_AO = 10;
+    COUNTRY_CODE_AQ = 11;
+    COUNTRY_CODE_AR = 12;
+    COUNTRY_CODE_AS = 13;
+    COUNTRY_CODE_AT = 14;
+    COUNTRY_CODE_AU = 15;
+    COUNTRY_CODE_AW = 16;
+    COUNTRY_CODE_AX = 17;
+    COUNTRY_CODE_AZ = 18;
+    COUNTRY_CODE_BA = 19;
+    COUNTRY_CODE_BB = 20;
+    COUNTRY_CODE_BD = 21;
+    COUNTRY_CODE_BE = 22;
+    COUNTRY_CODE_BF = 23;
+    COUNTRY_CODE_BG = 24;
+    COUNTRY_CODE_BH = 25;
+    COUNTRY_CODE_BI = 26;
+    COUNTRY_CODE_BJ = 27;
+    COUNTRY_CODE_BL = 28;
+    COUNTRY_CODE_BM = 29;
+    COUNTRY_CODE_BN = 30;
+    COUNTRY_CODE_BO = 31;
+    COUNTRY_CODE_BQ = 32;
+    COUNTRY_CODE_BR = 33;
+    COUNTRY_CODE_BS = 34;
+    COUNTRY_CODE_BT = 35;
+    COUNTRY_CODE_BV = 36;
+    COUNTRY_CODE_BW = 37;
+    COUNTRY_CODE_BY = 38;
+    COUNTRY_CODE_BZ = 39;
+    COUNTRY_CODE_CA = 40;
+    COUNTRY_CODE_CC = 41;
+    COUNTRY_CODE_CD = 42;
+    COUNTRY_CODE_CF = 43;
+    COUNTRY_CODE_CG = 44;
+    COUNTRY_CODE_CH = 45;
+    COUNTRY_CODE_CI = 46;
+    COUNTRY_CODE_CK = 47;
+    COUNTRY_CODE_CL = 48;
+    COUNTRY_CODE_CM = 49;
+    COUNTRY_CODE_CN = 50;
+    COUNTRY_CODE_CO = 51;
+    COUNTRY_CODE_CP = 52;
+    COUNTRY_CODE_CR = 53;
+    COUNTRY_CODE_CU = 54;
+    COUNTRY_CODE_CV = 55;
+    COUNTRY_CODE_CW = 56;
+    COUNTRY_CODE_CX = 57;
+    COUNTRY_CODE_CY = 58;
+    COUNTRY_CODE_CZ = 59;
+    COUNTRY_CODE_DE = 60;
+    COUNTRY_CODE_DG = 61;
+    COUNTRY_CODE_DJ = 63;
+    COUNTRY_CODE_DK = 64;
+    COUNTRY_CODE_DM = 65;
+    COUNTRY_CODE_DO = 66;
+    COUNTRY_CODE_DZ = 67;
+    COUNTRY_CODE_EA = 68;
+    COUNTRY_CODE_EC = 69;
+    COUNTRY_CODE_EE = 70;
+    COUNTRY_CODE_EG = 71;
+    COUNTRY_CODE_EH = 72;
+    COUNTRY_CODE_ER = 73;
+    COUNTRY_CODE_ES = 74;
+    COUNTRY_CODE_ET = 75;
+    COUNTRY_CODE_FI = 76;
+    COUNTRY_CODE_FJ = 77;
+    COUNTRY_CODE_FK = 78;
+    COUNTRY_CODE_FM = 79;
+    COUNTRY_CODE_FO = 80;
+    COUNTRY_CODE_FR = 81;
+    COUNTRY_CODE_GA = 82;
+    COUNTRY_CODE_GB = 83;
+    COUNTRY_CODE_GD = 84;
+    COUNTRY_CODE_GE = 85;
+    COUNTRY_CODE_GF = 86;
+    COUNTRY_CODE_GG = 87;
+    COUNTRY_CODE_GH = 88;
+    COUNTRY_CODE_GI = 89;
+    COUNTRY_CODE_GL = 90;
+    COUNTRY_CODE_GM = 91;
+    COUNTRY_CODE_GN = 92;
+    COUNTRY_CODE_GP = 93;
+    COUNTRY_CODE_GQ = 94;
+    COUNTRY_CODE_GR = 95;
+    COUNTRY_CODE_GS = 96;
+    COUNTRY_CODE_GT = 97;
+    COUNTRY_CODE_GU = 99;
+    COUNTRY_CODE_GW = 100;
+    COUNTRY_CODE_GY = 101;
+    COUNTRY_CODE_HK = 102;
+    COUNTRY_CODE_HM = 103;
+    COUNTRY_CODE_HN = 104;
+    COUNTRY_CODE_HR = 105;
+    COUNTRY_CODE_HT = 106;
+    COUNTRY_CODE_HU = 107;
+    COUNTRY_CODE_IC = 108;
+    COUNTRY_CODE_ID = 109;
+    COUNTRY_CODE_IE = 110;
+    COUNTRY_CODE_IL = 111;
+    COUNTRY_CODE_IM = 112;
+    COUNTRY_CODE_IN = 113;
+    COUNTRY_CODE_IO = 114;
+    COUNTRY_CODE_IQ = 115;
+    COUNTRY_CODE_IR = 116;
+    COUNTRY_CODE_IS = 117;
+    COUNTRY_CODE_IT = 118;
+    COUNTRY_CODE_JE = 119;
+    COUNTRY_CODE_JM = 120;
+    COUNTRY_CODE_JO = 121;
+    COUNTRY_CODE_JP = 122;
+    COUNTRY_CODE_KE = 123;
+    COUNTRY_CODE_KG = 124;
+    COUNTRY_CODE_KH = 125;
+    COUNTRY_CODE_KI = 126;
+    COUNTRY_CODE_KM = 127;
+    COUNTRY_CODE_KN = 128;
+    COUNTRY_CODE_KP = 129;
+    COUNTRY_CODE_KR = 130;
+    COUNTRY_CODE_KW = 131;
+    COUNTRY_CODE_KY = 132;
+    COUNTRY_CODE_KZ = 133;
+    COUNTRY_CODE_LA = 134;
+    COUNTRY_CODE_LB = 135;
+    COUNTRY_CODE_LC = 136;
+    COUNTRY_CODE_LI = 137;
+    COUNTRY_CODE_LK = 138;
+    COUNTRY_CODE_LR = 139;
+    COUNTRY_CODE_LS = 140;
+    COUNTRY_CODE_LT = 141;
+    COUNTRY_CODE_LU = 142;
+    COUNTRY_CODE_LV = 143;
+    COUNTRY_CODE_LY = 144;
+    COUNTRY_CODE_MA = 145;
+    COUNTRY_CODE_MC = 146;
+    COUNTRY_CODE_MD = 147;
+    COUNTRY_CODE_ME = 148;
+    COUNTRY_CODE_MF = 149;
+    COUNTRY_CODE_MG = 150;
+    COUNTRY_CODE_MH = 151;
+    COUNTRY_CODE_MK = 152;
+    COUNTRY_CODE_ML = 153;
+    COUNTRY_CODE_MM = 154;
+    COUNTRY_CODE_MN = 155;
+    COUNTRY_CODE_MO = 156;
+    COUNTRY_CODE_MP = 157;
+    COUNTRY_CODE_MQ = 158;
+    COUNTRY_CODE_MR = 159;
+    COUNTRY_CODE_MS = 160;
+    COUNTRY_CODE_MT = 161;
+    COUNTRY_CODE_MU = 162;
+    COUNTRY_CODE_MV = 163;
+    COUNTRY_CODE_MW = 164;
+    COUNTRY_CODE_MX = 165;
+    COUNTRY_CODE_MY = 166;
+    COUNTRY_CODE_MZ = 167;
+    COUNTRY_CODE_NA = 168;
+    COUNTRY_CODE_NC = 169;
+    COUNTRY_CODE_NE = 170;
+    COUNTRY_CODE_NF = 171;
+    COUNTRY_CODE_NG = 172;
+    COUNTRY_CODE_NI = 173;
+    COUNTRY_CODE_NL = 174;
+    COUNTRY_CODE_NO = 175;
+    COUNTRY_CODE_NP = 176;
+    COUNTRY_CODE_NR = 177;
+    COUNTRY_CODE_NU = 178;
+    COUNTRY_CODE_NZ = 179;
+    COUNTRY_CODE_OM = 180;
+    COUNTRY_CODE_PA = 181;
+    COUNTRY_CODE_PE = 182;
+    COUNTRY_CODE_PF = 183;
+    COUNTRY_CODE_PG = 184;
+    COUNTRY_CODE_PH = 185;
+    COUNTRY_CODE_PK = 186;
+    COUNTRY_CODE_PL = 187;
+    COUNTRY_CODE_PM = 188;
+    COUNTRY_CODE_PN = 189;
+    COUNTRY_CODE_PR = 190;
+    COUNTRY_CODE_PS = 191;
+    COUNTRY_CODE_PT = 192;
+    COUNTRY_CODE_PW = 193;
+    COUNTRY_CODE_PY = 194;
+    COUNTRY_CODE_QA = 195;
+    COUNTRY_CODE_RE = 196;
+    COUNTRY_CODE_RO = 197;
+    COUNTRY_CODE_RS = 198;
+    COUNTRY_CODE_RU = 199;
+    COUNTRY_CODE_RW = 200;
+    COUNTRY_CODE_SA = 201;
+    COUNTRY_CODE_SB = 202;
+    COUNTRY_CODE_SC = 203;
+    COUNTRY_CODE_SD = 204;
+    COUNTRY_CODE_SE = 205;
+    COUNTRY_CODE_SG = 206;
+    COUNTRY_CODE_SH = 207;
+    COUNTRY_CODE_SI = 208;
+    COUNTRY_CODE_SJ = 209;
+    COUNTRY_CODE_SK = 210;
+    COUNTRY_CODE_SL = 211;
+    COUNTRY_CODE_SM = 212;
+    COUNTRY_CODE_SN = 213;
+    COUNTRY_CODE_SO = 214;
+    COUNTRY_CODE_SR = 215;
+    COUNTRY_CODE_SS = 216;
+    COUNTRY_CODE_ST = 217;
+    COUNTRY_CODE_SV = 218;
+    COUNTRY_CODE_SX = 219;
+    COUNTRY_CODE_SY = 220;
+    COUNTRY_CODE_SZ = 221;
+    COUNTRY_CODE_TA = 222;
+    COUNTRY_CODE_TC = 223;
+    COUNTRY_CODE_TD = 224;
+    COUNTRY_CODE_TF = 225;
+    COUNTRY_CODE_TG = 226;
+    COUNTRY_CODE_TH = 227;
+    COUNTRY_CODE_TJ = 228;
+    COUNTRY_CODE_TK = 229;
+    COUNTRY_CODE_TL = 230;
+    COUNTRY_CODE_TM = 231;
+    COUNTRY_CODE_TN = 232;
+    COUNTRY_CODE_TO = 233;
+    COUNTRY_CODE_TR = 234;
+    COUNTRY_CODE_TT = 235;
+    COUNTRY_CODE_TV = 236;
+    COUNTRY_CODE_TW = 237;
+    COUNTRY_CODE_TZ = 238;
+    COUNTRY_CODE_UA = 239;
+    COUNTRY_CODE_UG = 240;
+    COUNTRY_CODE_UM = 241;
+    COUNTRY_CODE_US = 242;
+    COUNTRY_CODE_UY = 243;
+    COUNTRY_CODE_UZ = 244;
+    COUNTRY_CODE_VA = 245;
+    COUNTRY_CODE_VC = 246;
+    COUNTRY_CODE_VE = 247;
+    COUNTRY_CODE_VG = 248;
+    COUNTRY_CODE_VI = 249;
+    COUNTRY_CODE_VN = 250;
+    COUNTRY_CODE_VU = 251;
+    COUNTRY_CODE_WF = 252;
+    COUNTRY_CODE_WS = 253;
+    COUNTRY_CODE_XK = 254;
+    COUNTRY_CODE_YE = 255;
+    COUNTRY_CODE_YT = 256;
+    COUNTRY_CODE_ZA = 257;
+    COUNTRY_CODE_ZM = 258;
+    COUNTRY_CODE_ZW = 259;
+}
+
+message NetworkPerf {
+    NetworkCallAttributes network_call = 1;
+    HttpMethodType method = 2;
+    google.protobuf.StringValue error_code = 3;
+    google.protobuf.Int32Value status_code = 4;
+    google.protobuf.StringValue request_id = 5;
+    google.protobuf.StringValue endpoint = 6;
+    NetworkCallConnection connection = 7;
+    NetworkCallError error = 8;
+    google.protobuf.Int32Value response_body_bytes = 9;
+    google.protobuf.StringValue hubble_entity_id = 10;
+}
+
+message NetworkCallAttributes {
+    google.protobuf.StringValue name = 1; 
+    google.protobuf.Timestamp call_time = 2;
+    google.protobuf.Timestamp response_time = 3;
+    google.protobuf.Duration duration = 4;
+    
+}
+
+message NetworkCallConnection {
+    google.protobuf.Int32Value connection_attempts = 1;
+    google.protobuf.Duration connection_duration = 2;
+    google.protobuf.Duration dns_duration = 3;
+    google.protobuf.Duration secure_duration = 4;
+}
+
+message NetworkCallError {
+    google.protobuf.StringValue type = 1;
+    google.protobuf.StringValue message = 2;
+}
+
+enum HttpMethodType {
+    HTTP_METHOD_TYPE_INVALID = 0;
+    HTTP_METHOD_TYPE_GET = 1;
+    HTTP_METHOD_TYPE_PUT = 2;
+    HTTP_METHOD_TYPE_POST = 3;
+    HTTP_METHOD_TYPE_DELETE = 4;
+    HTTP_METHOD_TYPE_PATCH = 5;
+}
+
+enum LanguageCode {
+    LANGUAGE_CODE_INVALID = 0;
+    LANGUAGE_CODE_AA = 1;
+    LANGUAGE_CODE_AB = 2;
+    LANGUAGE_CODE_AE = 3;
+    LANGUAGE_CODE_AF = 4;
+    LANGUAGE_CODE_AK = 5;
+    LANGUAGE_CODE_AM = 6;
+    LANGUAGE_CODE_AN = 7;
+    LANGUAGE_CODE_AR = 8;
+    LANGUAGE_CODE_AS = 9;
+    LANGUAGE_CODE_AV = 10;
+    LANGUAGE_CODE_AY = 11;
+    LANGUAGE_CODE_AZ = 12;
+    LANGUAGE_CODE_BA = 13;
+    LANGUAGE_CODE_BE = 14;
+    LANGUAGE_CODE_BG = 15;
+    LANGUAGE_CODE_BI = 16;
+    LANGUAGE_CODE_BM = 17;
+    LANGUAGE_CODE_BN = 18;
+    LANGUAGE_CODE_BO = 19;
+    LANGUAGE_CODE_BR = 20;
+    LANGUAGE_CODE_BS = 21;
+    LANGUAGE_CODE_CA = 22;
+    LANGUAGE_CODE_CE = 23;
+    LANGUAGE_CODE_CH = 24;
+    LANGUAGE_CODE_CO = 25;
+    LANGUAGE_CODE_CR = 26;
+    LANGUAGE_CODE_CS = 27;
+    LANGUAGE_CODE_CU = 28;
+    LANGUAGE_CODE_CV = 29;
+    LANGUAGE_CODE_CY = 30;
+    LANGUAGE_CODE_DA = 31;
+    LANGUAGE_CODE_DE = 32;
+    LANGUAGE_CODE_DV = 33;
+    LANGUAGE_CODE_DZ = 34;
+    LANGUAGE_CODE_EE = 35;
+    LANGUAGE_CODE_EL = 36;
+    LANGUAGE_CODE_EN = 37;
+    LANGUAGE_CODE_EO = 38;
+    LANGUAGE_CODE_ES = 39;
+    LANGUAGE_CODE_ET = 40;
+    LANGUAGE_CODE_EU = 41;
+    LANGUAGE_CODE_FA = 42;
+    LANGUAGE_CODE_FF = 43;
+    LANGUAGE_CODE_FI = 44;
+    LANGUAGE_CODE_FJ = 45;
+    LANGUAGE_CODE_FO = 46;
+    LANGUAGE_CODE_FR = 47;
+    LANGUAGE_CODE_FY = 48;
+    LANGUAGE_CODE_GA = 49;
+    LANGUAGE_CODE_GD = 50;
+    LANGUAGE_CODE_GL = 51;
+    LANGUAGE_CODE_GN = 52;
+    LANGUAGE_CODE_GU = 53;
+    LANGUAGE_CODE_GV = 54;
+    LANGUAGE_CODE_HA = 55;
+    LANGUAGE_CODE_HE = 56;
+    LANGUAGE_CODE_HI = 57;
+    LANGUAGE_CODE_HO = 58;
+    LANGUAGE_CODE_HR = 59;
+    LANGUAGE_CODE_HT = 60;
+    LANGUAGE_CODE_HU = 61;
+    LANGUAGE_CODE_HY = 62;
+    LANGUAGE_CODE_HZ = 63;
+    LANGUAGE_CODE_IA = 64;
+    LANGUAGE_CODE_ID = 65;
+    LANGUAGE_CODE_IE = 66;
+    LANGUAGE_CODE_IG = 67;
+    LANGUAGE_CODE_II = 68;
+    LANGUAGE_CODE_IK = 69;
+    LANGUAGE_CODE_IO = 70;
+    LANGUAGE_CODE_IS = 71;
+    LANGUAGE_CODE_IT = 72;
+    LANGUAGE_CODE_IU = 73;
+    LANGUAGE_CODE_JA = 74;
+    LANGUAGE_CODE_JV = 75;
+    LANGUAGE_CODE_KA = 76;
+    LANGUAGE_CODE_KG = 77;
+    LANGUAGE_CODE_KI = 78;
+    LANGUAGE_CODE_KJ = 79;
+    LANGUAGE_CODE_KK = 80;
+    LANGUAGE_CODE_KL = 81;
+    LANGUAGE_CODE_KM = 82;
+    LANGUAGE_CODE_KN = 83;
+    LANGUAGE_CODE_KO = 84;
+    LANGUAGE_CODE_KR = 85;
+    LANGUAGE_CODE_KS = 86;
+    LANGUAGE_CODE_KU = 87;
+    LANGUAGE_CODE_KV = 88;
+    LANGUAGE_CODE_KW = 89;
+    LANGUAGE_CODE_KY = 90;
+    LANGUAGE_CODE_LA = 91;
+    LANGUAGE_CODE_LB = 92;
+    LANGUAGE_CODE_LG = 93;
+    LANGUAGE_CODE_LI = 94;
+    LANGUAGE_CODE_LN = 95;
+    LANGUAGE_CODE_LO = 96;
+    LANGUAGE_CODE_LT = 97;
+    LANGUAGE_CODE_LU = 98;
+    LANGUAGE_CODE_LV = 99;
+    LANGUAGE_CODE_MG = 100;
+    LANGUAGE_CODE_MH = 101;
+    LANGUAGE_CODE_MI = 102;
+    LANGUAGE_CODE_MK = 103;
+    LANGUAGE_CODE_ML = 104;
+    LANGUAGE_CODE_MM = 105;
+    LANGUAGE_CODE_MR = 106;
+    LANGUAGE_CODE_MS = 107;
+    LANGUAGE_CODE_MT = 108;
+    LANGUAGE_CODE_MY = 109;
+    LANGUAGE_CODE_NA = 110;
+    LANGUAGE_CODE_NB = 111;
+    LANGUAGE_CODE_ND = 112;
+    LANGUAGE_CODE_NE = 113;
+    LANGUAGE_CODE_NG = 114;
+    LANGUAGE_CODE_NL = 115;
+    LANGUAGE_CODE_NN = 116;
+    LANGUAGE_CODE_NO = 117;
+    LANGUAGE_CODE_NR = 118;
+    LANGUAGE_CODE_NV = 119;
+    LANGUAGE_CODE_NY = 120;
+    LANGUAGE_CODE_OC = 121;
+    LANGUAGE_CODE_OJ = 122;
+    LANGUAGE_CODE_OM = 123;
+    LANGUAGE_CODE_OR = 124;
+    LANGUAGE_CODE_OS = 125;
+    LANGUAGE_CODE_PA = 126;
+    LANGUAGE_CODE_PI = 127;
+    LANGUAGE_CODE_PL = 128;
+    LANGUAGE_CODE_PS = 129;
+    LANGUAGE_CODE_PT = 130;
+    LANGUAGE_CODE_QU = 131;
+    LANGUAGE_CODE_RM = 132;
+    LANGUAGE_CODE_RN = 133;
+    LANGUAGE_CODE_RO = 134;
+    LANGUAGE_CODE_RU = 135;
+    LANGUAGE_CODE_RW = 136;
+    LANGUAGE_CODE_SA = 137;
+    LANGUAGE_CODE_SC = 138;
+    LANGUAGE_CODE_SD = 139;
+    LANGUAGE_CODE_SE = 140;
+    LANGUAGE_CODE_SG = 141;
+    LANGUAGE_CODE_SI = 142;
+    LANGUAGE_CODE_SK = 143;
+    LANGUAGE_CODE_SL = 144;
+    LANGUAGE_CODE_SM = 145;
+    LANGUAGE_CODE_SN = 146;
+    LANGUAGE_CODE_SO = 147;
+    LANGUAGE_CODE_SQ = 148;
+    LANGUAGE_CODE_SR = 149;
+    LANGUAGE_CODE_SS = 150;
+    LANGUAGE_CODE_ST = 151;
+    LANGUAGE_CODE_SU = 152;
+    LANGUAGE_CODE_SV = 153;
+    LANGUAGE_CODE_SW = 154;
+    LANGUAGE_CODE_TA = 155;
+    LANGUAGE_CODE_TE = 156;
+    LANGUAGE_CODE_TG = 157;
+    LANGUAGE_CODE_TH = 158;
+    LANGUAGE_CODE_TI = 159;
+    LANGUAGE_CODE_TK = 160;
+    LANGUAGE_CODE_TL = 161;
+    LANGUAGE_CODE_TN = 162;
+    LANGUAGE_CODE_TO = 163;
+    LANGUAGE_CODE_TR = 164;
+    LANGUAGE_CODE_TS = 165;
+    LANGUAGE_CODE_TT = 166;
+    LANGUAGE_CODE_TW = 167;
+    LANGUAGE_CODE_TY = 168;
+    LANGUAGE_CODE_UG = 169;
+    LANGUAGE_CODE_UK = 170;
+    LANGUAGE_CODE_UR = 171;
+    LANGUAGE_CODE_UZ = 172;
+    LANGUAGE_CODE_VE = 173;
+    LANGUAGE_CODE_VI = 174;
+    LANGUAGE_CODE_VO = 175;
+    LANGUAGE_CODE_WA = 176;
+    LANGUAGE_CODE_WO = 177;
+    LANGUAGE_CODE_XH = 178;
+    LANGUAGE_CODE_YI = 179;
+    LANGUAGE_CODE_YO = 180;
+    LANGUAGE_CODE_ZA = 181;
+    LANGUAGE_CODE_ZH = 182;
+    LANGUAGE_CODE_ZU = 183;
+}
+
+enum NetworkType {
+    NETWORK_TYPE_INVALID = 0;
+    NETWORK_TYPE_INACTIVE = 1;
+    NETWORK_TYPE_WIFI = 2;
+    NETWORK_TYPE_CELLULAR = 3;
+    NETWORK_TYPE_CELLULAR_2G = 4;
+    NETWORK_TYPE_CELLULAR_3G = 5;
+    NETWORK_TYPE_CELLULAR_4G = 6;
+    NETWORK_TYPE_CELLULAR_5G = 7;
+}
+
+message JsonEvent {
+    google.protobuf.StringValue value = 1;
+    google.protobuf.StringValue name = 2;
+}
+
+message LogEvent {
+    google.protobuf.StringValue owner = 1;
+    LogLevel level = 2;
+    google.protobuf.StringValue message = 3;
+    repeated string stacktrace = 4;
+    repeated string tags = 5;
+}
+
+enum LogLevel {
+    LOG_LEVEL_INVALID = 0;
+    LOG_LEVEL_DEBUG = 1;
+    LOG_LEVEL_INFO = 2;
+    LOG_LEVEL_WARNING = 3;
+    LOG_LEVEL_CRITICAL = 4;
+    LOG_LEVEL_ERROR = 5;
+}
+
+message AppPublishInitialData {
+    AppPublishResponse response = 1;
+}
+
+message AppPublishResponse {
+    message BatchField {
+        string batchId = 1;
+    }
+    message ResponseTextField {
+        string responseText = 1;
+    }
+    message Field3 {
+        int32 value = 2;
+    }
+    message EventCountField {
+        int32 EventCount = 1;
+    }
+    BatchField batchId = 1;
+    ResponseTextField responseText = 2;
+    Field3 field3 = 3;
+    EventCountField EventCount = 5;
+}
