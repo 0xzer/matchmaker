@@ -4,7 +4,7 @@ MatchMaker is a lightweight, easy-to-use Go library for interacting with Tinder'
 
 ## Features
 
-- Simple, idiomatic interface for interacting with Tinder's API. [here](https://github.com/0xzero/matchmaker/tree/main/mdtest)
+- Simple, idiomatic interface for interacting with Tinder's API. [here](https://github.com/0xzer/matchmaker/tree/main/mdtest)
 - Full Go module compatibility and support for Semantic Versioning.
 - Helpful debug logging to assist with troubleshooting.
 
@@ -17,7 +17,7 @@ go get github.com/0xzero/matchmaker
 ```
 
 # Usage
-For more usage examples you can check [here](https://github.com/0xzero/matchmaker/tree/main/mdtest), it should contain everything.
+For more usage examples you can check [here](https://github.com/0xzer/matchmaker/tree/main/mdtest), it should contain everything.
 ```go
 package matchmakerexploring
 
