@@ -19,7 +19,7 @@ go get github.com/0xzer/matchmaker
 # Usage
 For more usage examples you can check [here](https://github.com/0xzer/matchmaker/tree/main/mdtest), it should contain everything.
 ```go
-package matchmakerexploring
+package main
 
 import (
 	"github.com/0xzer/matchmaker"
