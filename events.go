@@ -3,8 +3,8 @@ package matchmaker
 import (
 	"io"
 	"strconv"
-	bin "github.com/0xzero/matchmaker/binary"
-	"github.com/0xzero/matchmaker/util"
+	bin "github.com/0xzer/matchmaker/binary"
+	"github.com/0xzer/matchmaker/util"
 
 	"google.golang.org/protobuf/proto"
 	tpb "google.golang.org/protobuf/types/known/timestamppb"

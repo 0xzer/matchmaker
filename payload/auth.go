@@ -3,7 +3,7 @@ package payload
 import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 	wpb "google.golang.org/protobuf/types/known/wrapperspb"
-	bin "github.com/0xzero/matchmaker/binary"
+	bin "github.com/0xzer/matchmaker/binary"
 )
 
 type AuthPayloads struct {}

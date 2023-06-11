@@ -1,4 +1,4 @@
-package matchmaker
+package matchmaker // import "github.com/0xzer/matchmaker"
 
 import (
 	"log"
@@ -6,9 +6,9 @@ import (
 	"net/url"
 	"time"
 
-	bin "github.com/0xzero/matchmaker/binary"
-	"github.com/0xzero/matchmaker/payload"
-	"github.com/0xzero/matchmaker/util"
+	bin "github.com/0xzer/matchmaker/binary"
+	"github.com/0xzer/matchmaker/payload"
+	"github.com/0xzer/matchmaker/util"
 	"github.com/rs/zerolog"
 	wpb "google.golang.org/protobuf/types/known/wrapperspb"
 )

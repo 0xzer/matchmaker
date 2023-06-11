@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/0xzero/matchmaker/util"
+	"github.com/0xzer/matchmaker/util"
 )
 
 func (c *Client) PostRequest(url string, payload []byte, headers interface{}) (*http.Response, error) {

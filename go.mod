@@ -1,4 +1,4 @@
-module github.com/0xzero/matchmaker
+module github.com/0xzer/matchmaker
 
 go 1.20
 

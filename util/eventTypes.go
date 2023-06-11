@@ -2,7 +2,7 @@ package util
 
 import (
 	"time"
-	bin "github.com/0xzero/matchmaker/binary"
+	bin "github.com/0xzer/matchmaker/binary"
 	dpb "google.golang.org/protobuf/types/known/durationpb"
 	wpb "google.golang.org/protobuf/types/known/wrapperspb"
 )

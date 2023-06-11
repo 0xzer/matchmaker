@@ -2,8 +2,8 @@ package matchmaker_test
 
 import (
 	"testing"
-	"github.com/0xzero/matchmaker"
-	"github.com/0xzero/matchmaker/debug"
+	"github.com/0xzer/matchmaker"
+	"github.com/0xzer/matchmaker/debug"
 )
 
 var client *matchmaker.Client

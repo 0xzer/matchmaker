@@ -3,8 +3,8 @@ package matchmaker
 import (
 	"time"
 
-	bin "github.com/0xzero/matchmaker/binary"
-	"github.com/0xzero/matchmaker/response"
+	bin "github.com/0xzer/matchmaker/binary"
+	"github.com/0xzer/matchmaker/response"
 )
 
 

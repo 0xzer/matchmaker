@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"time"
-	"github.com/0xzero/matchmaker/util"
+	"github.com/0xzer/matchmaker/util"
 	"github.com/gorilla/websocket"
 )
 

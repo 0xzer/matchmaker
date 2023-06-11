@@ -6,10 +6,10 @@ import (
 	"log"
 	"time"
 
-	bin "github.com/0xzero/matchmaker/binary"
-	"github.com/0xzero/matchmaker/payload"
-	response "github.com/0xzero/matchmaker/response"
-	"github.com/0xzero/matchmaker/util"
+	bin "github.com/0xzer/matchmaker/binary"
+	"github.com/0xzer/matchmaker/payload"
+	response "github.com/0xzer/matchmaker/response"
+	"github.com/0xzer/matchmaker/util"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 

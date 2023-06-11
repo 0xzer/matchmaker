@@ -1,7 +1,7 @@
 package matchmaker
 
 import (
-	bin "github.com/0xzero/matchmaker/binary"
+	bin "github.com/0xzer/matchmaker/binary"
 )
 
 func (c *Client) HandleAppActionEvent(actionEvent *bin.AppAction) {

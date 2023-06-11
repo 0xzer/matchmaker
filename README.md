@@ -13,7 +13,7 @@ MatchMaker is a lightweight, easy-to-use Go library for interacting with Tinder'
 Use the [package manager](https://golang.org/dl/) to install matchmaker.
 
 ```bash
-go get github.com/0xzero/matchmaker
+go get github.com/0xzer/matchmaker
 ```
 
 # Usage
@@ -22,33 +22,32 @@ For more usage examples you can check [here](https://github.com/0xzer/matchmaker
 package matchmakerexploring
 
 import (
-	"github.com/0xzero/matchmaker"
-	"github.com/0xzero/matchmaker/debug"
+	"github.com/0xzer/matchmaker"
+	"github.com/0xzer/matchmaker/debug"
 )
 
 var client *matchmaker.Client
 func main() {
     // nil for new device
-    // alternatively pass an empty instance of zerolog.Logger{} to disable logging
-    client = matchmaker.NewClient(nil, debug.NewLogger(), nil)
-    client.SetEventHandler(evHandler)
+	// alternatively pass an empty instance of zerolog.Logger{} to disable logging
+	client = matchmaker.NewClient(nil, debug.NewLogger(), nil)
+	client.SetEventHandler(evHandler)
 
-    smsSent, err := client.Authenticator.SendSMS("someNumber...")
-    if err != nil {
-	client.Logger.Fatal().Err(err).Msg("Failed to send sms")
-    }
+	smsSent, err := client.Authenticator.SendSMS("someNumber...")
+	if err != nil {
+		client.Logger.Fatal().Err(err).Msg("Failed to send sms")
+	}
     client.Logger.Info().Any("data", smsSent).Msg("Sent sms")
-    // there is a possibility for this to not return the loginresult, that is if the device is not recognized and needs email validation aswell.
-    verifiedOTP, err2 := client.Authenticator.VerifyOTP("OTP...")
+	verifiedOTP, err2 := client.Authenticator.VerifyOTP("OTP...") // there is a possibility for this to not return the loginresult, that is if the device is not recognized and needs email validation aswell.
     if err2 != nil {
-	client.Logger.Fatal().Err(err2).Msg("Failed to verify OTP")
-    }
+		client.Logger.Fatal().Err(err2).Msg("Failed to verify OTP")
+	}
     client.Logger.Info().Any("data", verifiedOTP).Msg("Verified OTP")
 
     socketErr := client.Connect()
-    if socketErr != nil {
-	client.Logger.Fatal().Err(socketErr).Msg("Failed to connect to socket")
-    }
+	if socketErr != nil {
+		client.Logger.Fatal().Err(socketErr).Msg("Failed to connect to socket")
+	}
 }
 
 func evHandler(rawEvt interface{}) {
@@ -62,11 +61,11 @@ func evHandler(rawEvt interface{}) {
             Any("message_id", msg.ID).
             Any("type", msg.Type).
             Msg("New Message!")
-	case matchmaker.Event_ClientReady:
-	    client.Logger.Info().Any("data",evt).Msg("Client is ready and connected!")
+		case matchmaker.Event_ClientReady:
+			client.Logger.Info().Any("data",evt).Msg("Client is ready and connected!")
     }
 }
 ```
 
 # Documentation
-See the **[GoDoc page for this](https://pkg.go.dev/github.com/0xzero/matchmaker)**.
+See the **[GoDoc page for this](https://pkg.go.dev/github.com/0xzer/matchmaker)**.

@@ -8,10 +8,10 @@ import (
 	"net/http"
 	"time"
 
-	bin "github.com/0xzero/matchmaker/binary"
-	"github.com/0xzero/matchmaker/payload"
-	"github.com/0xzero/matchmaker/response"
-	"github.com/0xzero/matchmaker/util"
+	bin "github.com/0xzer/matchmaker/binary"
+	"github.com/0xzer/matchmaker/payload"
+	"github.com/0xzer/matchmaker/response"
+	"github.com/0xzer/matchmaker/util"
 )
 
 var (
@@ -223,9 +223,6 @@ func (a *API) StartTyping(userId string, matchId string) error {
 	return nil
 }
 
-/*
-
-*/
 func (a *API) GetUpdates(lastActivityDate time.Time, nudge bool) (response.UpdatesResponse, error) {
 	date := util.FormatDateActivity(lastActivityDate)
 	payload := payload.GetUpdates{

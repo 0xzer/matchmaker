@@ -2,7 +2,7 @@ package payload
 
 import (
 	tpb "google.golang.org/protobuf/types/known/timestamppb"
-	bin "github.com/0xzero/matchmaker/binary"
+	bin "github.com/0xzer/matchmaker/binary"
 )
 
 type SocketPayloads struct {}

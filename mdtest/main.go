@@ -8,10 +8,10 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
-	"github.com/0xzero/matchmaker"
-	"github.com/0xzero/matchmaker/debug"
-	"github.com/0xzero/matchmaker/payload"
-	"github.com/0xzero/matchmaker/util"
+	"github.com/0xzer/matchmaker"
+	"github.com/0xzer/matchmaker/debug"
+	"github.com/0xzer/matchmaker/payload"
+	"github.com/0xzer/matchmaker/util"
 )
 
 var cli *matchmaker.Client
